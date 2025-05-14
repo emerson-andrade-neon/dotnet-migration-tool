@@ -13,7 +13,8 @@ public class Runner(IEnumerable<IAction> actions, IWorkflowObserver observer)
 
     public void AddRepository(string repositoryName)
     {
-        if (!_workflows.Any(e => e.ExistRepository(repositoryName)))
+        repositoryName = repositoryName.Trim();
+        if (!_workflows.Exists(e => e.ExistRepository(repositoryName)))
         {
             var context = new Context(repositoryName);
             var executions = actions.Select(a => new Activity(a));

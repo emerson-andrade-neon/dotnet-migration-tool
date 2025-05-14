@@ -7,6 +7,8 @@ public static class AppEnvironment
     {
         new GitClone(),
         new UpdateDotNetVersion(),
+        new UpdateDockerFile(),
+        new UpdateYamel(),
         new UpdatePackages(),
         new Compile(),
         new GitCheckout(),
@@ -24,7 +26,7 @@ public static class AppEnvironment
     }
     public static IEnumerable<IAction> GetStandardActions() => StandardActions;
 
-    public static readonly string NewDotNetVerson = "net8.0";
+    public static readonly string NewDotNetVerson = "net9.0";
 
     public static readonly string RepoPath;
 

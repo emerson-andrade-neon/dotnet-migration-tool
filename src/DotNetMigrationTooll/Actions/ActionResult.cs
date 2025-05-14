@@ -10,7 +10,9 @@ public record ActionResult(int ErrorCode, string Message)
         var output = await process.StandardOutput.ReadToEndAsync();
         var error = await process.StandardError.ReadToEndAsync();
         await process.WaitForExitAsync();
-        var message = $"{output}{Environment.NewLine}{error}";
+
+        var separator = !string.IsNullOrEmpty(output) && !string.IsNullOrEmpty(error) ? Environment.NewLine : null;
+        var message = $"{output}{separator}{error}";
 
         var code = process.ExitCode == 0 || process.ExitCode == otherSuccessCode ? 0 : process.ExitCode;
 
