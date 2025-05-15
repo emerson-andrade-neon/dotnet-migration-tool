@@ -8,7 +8,7 @@ public static class AppEnvironment
         new GitClone(),
         new UpdateDotNetVersion(),
         new UpdateDockerFile(),
-        new UpdateYamel(),
+        new MonitoringConfig(),
         new UpdatePackages(),
         new Compile(),
         new GitCheckout(),

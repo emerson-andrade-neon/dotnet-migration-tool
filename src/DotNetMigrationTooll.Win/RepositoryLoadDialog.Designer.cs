@@ -32,11 +32,13 @@ partial class RepositoryLoadDialog
         btnOk = new Button();
         btnCancel = new Button();
         txbRepositories = new TextBox();
+        label1 = new Label();
         panel1.SuspendLayout();
         SuspendLayout();
         // 
         // panel1
         // 
+        panel1.Controls.Add(label1);
         panel1.Controls.Add(btnOk);
         panel1.Controls.Add(btnCancel);
         panel1.Dock = DockStyle.Bottom;
@@ -77,6 +79,16 @@ partial class RepositoryLoadDialog
         txbRepositories.Size = new Size(535, 269);
         txbRepositories.TabIndex = 1;
         // 
+        // label1
+        // 
+        label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        label1.ForeColor = Color.Red;
+        label1.Location = new Point(3, 11);
+        label1.Name = "label1";
+        label1.Size = new Size(252, 38);
+        label1.TabIndex = 2;
+        label1.Text = "Informe apenas o nome dos repos (um em cada linha)";
+        // 
         // RepositoryLoadDialog
         // 
         AcceptButton = btnOk;
@@ -105,4 +117,5 @@ partial class RepositoryLoadDialog
     private Button btnOk;
     private Button btnCancel;
     private TextBox txbRepositories;
+    private Label label1;
 }

@@ -97,11 +97,7 @@ partial class WorkflowForm
         // 
         // btnLoad
         // 
-        btnLoad.BackColor = Color.ForestGreen;
-        btnLoad.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
         btnLoad.FlatStyle = FlatStyle.Flat;
-        btnLoad.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        btnLoad.ForeColor = Color.White;
         btnLoad.Location = new Point(3, 3);
         btnLoad.Name = "btnLoad";
         btnLoad.Size = new Size(107, 94);
@@ -113,7 +109,6 @@ partial class WorkflowForm
         // btnExecuteAll
         // 
         btnExecuteAll.BackColor = SystemColors.Control;
-        btnExecuteAll.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
         btnExecuteAll.FlatStyle = FlatStyle.Flat;
         btnExecuteAll.Font = new Font("Segoe UI", 9F);
         btnExecuteAll.ForeColor = SystemColors.ControlText;

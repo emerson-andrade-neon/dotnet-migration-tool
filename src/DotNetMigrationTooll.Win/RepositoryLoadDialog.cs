@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace DotNetMigrationTooll.Win;
+﻿namespace DotNetMigrationTooll.Win;
 public partial class RepositoryLoadDialog : Form
 {
     private RepositoryLoadDialog()
@@ -20,9 +10,9 @@ public partial class RepositoryLoadDialog : Form
 
     public static IEnumerable<string> ShowModal()
     {
-        using (var dialog = new RepositoryLoadDialog()) 
-        { 
-            if (dialog.ShowDialog() == DialogResult.OK) 
+        using (var dialog = new RepositoryLoadDialog())
+        {
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 return dialog.Repositories;
             }
