@@ -5,14 +5,14 @@ internal class UpdatePackages : IAction
 {
     public async Task<ActionResult> Execute(Context context)
     {
-        await ExecuteProcess("dotnet tool install --global dotnet-outdated-tool");
+        await ExecuteProcess("dotnet", "dotnet tool install --global dotnet-outdated-tool");
 
-        return await ExecuteProcess($"dotnet outdated --upgrade {context.LocalPath}");
+        return await ExecuteProcess("dotnet", $"dotnet outdated --upgrade {context.LocalPath}");
     }
 
-    private static async Task<ActionResult> ExecuteProcess(string command)
+    private static async Task<ActionResult> ExecuteProcess(string fileName, string command)
     {
-        var processStartInfo = new ProcessStartInfo("dotnet", command)
+        var processStartInfo = new ProcessStartInfo(fileName, command)
         {
             RedirectStandardOutput = true,
             RedirectStandardError = true,
