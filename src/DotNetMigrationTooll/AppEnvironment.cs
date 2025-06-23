@@ -8,6 +8,7 @@ public static class AppEnvironment
         new GitClone(),
         new UpdateDotNetVersion(),
         new UpdateDockerFile(),
+        new RemoveMediaTrLib(),
         new MonitoringConfig(),
         new UpdatePackages(),
         new Compile(),

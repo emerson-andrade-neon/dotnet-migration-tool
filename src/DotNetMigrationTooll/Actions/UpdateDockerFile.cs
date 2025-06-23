@@ -4,24 +4,23 @@ namespace DotNetMigrationTooll.Actions;
 internal class UpdateDockerFile() : IAction
 {
     private const string DockerFileTemplate = @"FROM ${REGISTRY_URL}/base-images/dotnet/sdk:9.0-alpine AS build
-        WORKDIR /app
-        COPY . .
-        RUN dotnet publish -c Release -o out #projectName#
+WORKDIR /app
+COPY . .
+RUN dotnet publish -c Release -o out #projectName#
 
-        FROM ${REGISTRY_URL}/base-images/dotnet/aspnet:9.0-alpine AS runtime
-        #USER root
-        WORKDIR /app
-        COPY --from=build /app/out .
+FROM ${REGISTRY_URL}/base-images/dotnet/aspnet:9.0-alpine AS runtime
+WORKDIR /app
+COPY --from=build /app/out .
 
-        RUN echo ""dotnet #projectName#.dll"" >> entrypoint.sh \
-            && chmod a+x entrypoint.sh
+RUN echo ""dotnet #projectName#.dll"" >> entrypoint.sh \
+    && chmod a+x entrypoint.sh
 
-        RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-        USER appuser
-        EXPOSE 8080
-        ENV ASPNETCORE_URLS=http://+:8080
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
 
-        ENTRYPOINT [""sh"", ""entrypoint.sh""]";
+ENTRYPOINT [""sh"", ""entrypoint.sh""]";
 
     public async Task<ActionResult> Execute(Context context)
     {

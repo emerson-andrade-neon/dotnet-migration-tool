@@ -1,12 +1,16 @@
 ﻿namespace DotNetMigrationTooll.Actions;
 internal class MonitoringConfig() : IAction
 {
-    private const string ExtraEnvs = @"extraEnvs:
-  - name: OTEL_SERVICE_NAME
-    value: ""$DOMAIN.$APP_NAME-$ENV""";
+    private const string LanguageEnv = @"    LANGUAGE: ""$LANGUAGE""";
+
+    private const string OtelEnv = @"    OTEL_AUTO_INSTRUMENTATION: ""$OTEL_AUTO_INSTRUMENTATION""";
 
     private const string PodAnnotations = @"podAnnotations:
   dynatrace.com/inject: ""false""";
+
+    private const string NewEnvVariables = @"
+    OTEL_AUTO_INSTRUMENTATION=true
+    LANGUAGE=dotnet";
 
     private const string LogPackages = @"
     <ItemGroup>
@@ -29,21 +33,29 @@ internal class MonitoringConfig() : IAction
     public async Task<ActionResult> Execute(Context context)
     {
         await AddLogPackagesInHostProjectAsync(context);
+        await AddEnvVariablesAsync(context, "dev.env");
+        await AddEnvVariablesAsync(context, "hml.env");
+        await AddEnvVariablesAsync(context, "prod.env");
 
         var yamelFiles = System.IO.Directory.GetFiles(context.LocalPath, "values.yaml", SearchOption.AllDirectories);
 
-        var language = @"    LANGUAGE: ""$LANGUAGE""";
+        var configDataSection = "config:";
+        var dataSectionIndicator = "data:";
 
         foreach (var yamelFile in yamelFiles)
         {
             var text = (await File.ReadAllTextAsync(yamelFile)).TrimEnd();
             var newText = text;
-            if (!text.Contains(language))
+            var configIndex = newText.IndexOf(configDataSection);
+            var dataStartIndex = newText.IndexOf(dataSectionIndicator, configIndex) + dataSectionIndicator.Length;
+            if (!text.Contains(LanguageEnv))
             {
-                var firstDataLineIndex = text.IndexOf("    ");
-                newText = text.Insert(firstDataLineIndex, $"{language}{Environment.NewLine}");
+                newText = newText.Insert(dataStartIndex, $"{Environment.NewLine}{LanguageEnv}");
             }
-            newText = AddToEnd(newText, ExtraEnvs);
+            if (!text.Contains(OtelEnv))
+            {
+                newText = newText.Insert(dataStartIndex, $"{Environment.NewLine}{OtelEnv}");
+            }
             newText = AddToEnd(newText, PodAnnotations);
             await File.WriteAllTextAsync(yamelFile, newText);
         }
@@ -75,10 +87,28 @@ internal class MonitoringConfig() : IAction
             }
         }
     }
+
     private bool IsHost(string text)
     {
         return
             text.Contains("<Project Sdk=\"Microsoft.NET.Sdk.Web\">", StringComparison.OrdinalIgnoreCase) ||
+            text.Contains("<Project Sdk=\"Microsoft.NET.Sdk.Worker\">", StringComparison.OrdinalIgnoreCase) ||
             text.Contains("<OutputType>Exe</OutputType>", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task AddEnvVariablesAsync(Context context, string fileName)
+    {
+        var projectFiles = System.IO.Directory.GetFiles(context.LocalPath, fileName, SearchOption.AllDirectories);
+        foreach (var projectFile in projectFiles)
+        {
+            var text = await File.ReadAllTextAsync(projectFile);
+            if (!text.Contains("LANGUAGE=dotnet"))
+            {
+                text = $"{text}{Environment.NewLine}{NewEnvVariables}";
+
+                await File.WriteAllTextAsync(projectFile, text);
+
+            }
+        }
     }
 }
